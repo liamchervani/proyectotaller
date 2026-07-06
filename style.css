@@ -1,0 +1,241 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Evita que el padding sume tamaño extra a los elementos */
+    font-family: Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    /* Fondo con imagen centrada y adaptada que cubre toda la pantalla */
+    background: url("images (3).jpg") center/cover no-repeat;
+}
+
+/* ==========================================================================
+   2. CONTENEDOR DE AUTENTICACIÓN (LOGIN Y REGISTRO)
+   ========================================================================== */
+.contenedor {
+    width: 100%;
+    max-width: 420px;
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.3); /* Sombra difuminada para dar profundidad */
+}
+
+.logo {
+    font-size: 60px;
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.subtitulo {
+    text-align: center;
+    color: gray;
+    margin-bottom: 20px;
+}
+
+/* Campos de entrada de datos uniformes */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+/* Botones compartidos */
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s ease; /* Suaviza el cambio de color al pasar el cursor */
+}
+
+.btn-login {
+    background: #ff9800; /* Color naranja mecánico institucional */
+}
+
+.btn-registro {
+    background: #2e7d32; /* Color verde de creación */
+}
+
+.link {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.link a {
+    color: #ff9800;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Elementos donde se inyectan las alertas dinámicas de JavaScript */
+#mensajeLogin,
+#mensajeRegistro {
+    text-align: center;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* Oculta la caja de registro por defecto en el primer render */
+#registroBox {
+    display: none;
+}
+
+
+.dashboard {
+    display: none; /* JavaScript lo cambiará a 'block' al iniciar sesión */
+    position: fixed;
+    inset: 0; /* Cubre el 100% de la pantalla encima del login */
+    background: #f5f5f5;
+    z-index: 1000; /* Asegura que se dibuje por encima del fondo del body */
+}
+
+.navbar {
+    background: #222;
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    height: 70px; /* Altura fija para calcular el scroll del contenido inferior */
+}
+
+.navbar button {
+    width: auto;
+    background: #d32f2f; /* Botón rojo de salida */
+    padding: 10px 15px;
+    margin: 0;
+}
+
+/* ¡CAMBIO CRUCIAL!: Permitir scroll vertical (overflow-y) para ver el mapa e info sin romperse */
+.contenido {
+    display: block; /* block para permitir un flujo vertical correcto */
+    height: calc(100vh - 70px); /* Ocupa exactamente el resto de la pantalla disponible */
+    overflow-y: auto; /* Activa la barra de desplazamiento si el contenido supera el alto */
+    padding: 30px;
+    max-width: 900px; /* Centra el contenido horizontalmente para que se vea elegante */
+    margin: 0 auto;
+}
+
+.usuario {
+    font-weight: bold;
+}
+
+.info-taller {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    text-align: left;
+}
+
+.info-taller h3 {
+    border-bottom: 2px solid #ff9800; /* Subrayado temático para los títulos */
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+}
+
+.mapa-contenedor {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    text-align: left;
+    margin-bottom: 40px; /* Espacio extra al final para que respire el diseño */
+}
+
+
+   /* DISEÑO ADAPTABLE */
+@media(max-width: 600px) {
+    .contenedor {
+        padding: 20px;
+    }
+
+    .navbar {
+        flex-direction: column;
+        height: auto; /* Se adapta dinámicamente si los elementos se enciman en celulares */
+    }
+    
+    .contenido {
+        height: auto; /* Elimina la restricción de altura en pantallas pequeñas */
+    }
+}
+ /* ==========================================================================
+   6. MEJORAS VISUALES PANEL SOBRE NUESTRO TALLER
+   ========================================================================== */
+.titulo-seccion {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #1f1f1f;
+    border-bottom: 3px solid #ff9800;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.descripcion-taller {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    text-align: left;
+    color: #555 !important;
+}
+
+/* Estilo para las nuevas sub-tarjetas interactivas */
+.tarjeta-info {
+    background: #fdfdfd;
+    border: 1px solid #eef0f2;
+    border-radius: 12px;
+    padding: 25px 20px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto levitación al pasar el cursor */
+.tarjeta-info:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    border-color: #ff9800; /* Ilumina el borde con el color del taller */
+}
+
+.icono-tarjeta {
+    font-size: 2.2rem;
+    margin-bottom: 12px;
+}
+
+.tarjeta-info h5 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 15px;
+}
+
+.tarjeta-info p {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.texto-destacado {
+    color: #ff9800;
+    font-weight: bold;
+}
