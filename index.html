@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://jsdelivr.net" rel="stylesheet">
+   
+    <title>Taller Mecánico</title>
+
+</head>
+
+<body>
+
+<!-- CONTENEDOR PRINCIPAL DE AUTENTICACIÓN (LOGIN Y REGISTRO) -->
+<div class="container d-flex justify-content-center align-items-center min-vh-100" id="authContainer">
+    <div class="contenedor">
+
+        <!-- SECCIÓN: INICIAR SESIÓN (LOGIN) -->
+        <div id="loginBox">
+            <h2>Iniciar Sesión</h2>
+            <p class="subtitulo">Taller Mecánico</p>
+            
+            <!-- El uso de <form> con 'onsubmit' permite capturar la tecla ENTER automáticamente -->
+            <!-- event.preventDefault() evita que la página web se recargue al presionar ENTER -->
+            <form id="formLogin" onsubmit="event.preventDefault(); login();">
+                <input class="form-control mb-3" type="text" id="loginUsuario" placeholder="Usuario" required>
+                <input class="form-control mb-3" type="password" id="loginPassword" placeholder="Contraseña" required>
+                <button type="submit" class="btn-login">Ingresar</button>
+            </form>
+
+            <!-- Aquí se inyectarán las alertas de JS (ej: Usuario no encontrado) -->
+            <div id="mensajeLogin"></div>
+            
+            <div class="link">
+                <a onclick="mostrarRegistro()">Crear una cuenta</a>
+            </div>
+        </div>
+
+        <!-- SECCIÓN: REGISTRARSE -->
+        <!-- Oculto al inicio (display: none) mediante JS o estilos iniciales -->
+        <div id="registroBox" style="display: none;">
+            <div class="logo">🔧</div>
+                <h2>Registrarse</h2>
+            <p class="subtitulo">Crear nueva cuenta</p>
+            
+            <!-- Igual que en el login, el <form> procesa el ENTER de forma nativa -->
+      <form id="formRegistro" onsubmit="event.preventDefault(); registrar();">
+        <input class="form-control mb-3" type="text" id="registroUsuario" placeholder="Usuario" required>
+           <input class="form-control mb-3" type="password" id="registroPassword" placeholder="Contraseña" required>
+                <button type="submit" class="btn-registro">Registrarse</button>
+            </form>
+
+            <div id="mensajeRegistro"></div>
+            <div class="link">
+                <a onclick="mostrarLogin()">Ya tengo una cuenta</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- SECCIÓN: PANEL PRINCIPAL (DASHBOARD/MENÚ DEL TALLER) -->
+<!-- Se mantiene oculto al inicio y solo se muestra cuando el login es correcto -->
+<div class="dashboard" id="dashboard" style="display: none;">
+    
+    <!-- Barra de navegación superior -->
+    <div class="navbar">
+        <h2> Taller Mecánico</h2>
+        <div class="usuario" id="usuarioActivo"></div>
+        <button onclick="cerrarSesion()">Cerrar sesión</button>
+    </div>
+
+    <!-- Contenido de información interna del taller -->
+    <div class="contenido">
+        <h1> Inicio</h1>
+        <p>Bienvenido al sistema del taller.</p>
+
+        <!-- Bloque informativo con rejilla responsiva de Bootstrap -->
+                <!-- SECCIÓN DE INFORMACIÓN DEL TALLER REDISEÑADA -->
+        <div class="info-taller mt-4">
+            <h3 class="titulo-seccion">Sobre Nuestro Taller</h3>
+            <p class="descripcion-taller text-muted mb-4">
+                Ofrecemos servicios de mecánica general, diagnóstico computarizado, frenos, suspensión y cambio de aceite. Nuestro compromiso es brindarte un servicio rápido, honesto y con repuestos de la más alta calidad para que tu vehículo siempre esté en óptimas condiciones. 
+            </p> <br> <br> <br>
+            
+            <div class="row g-4 mt-2"> <!-- El 'g-4' le da una separación perfecta a las columnas -->
+                
+                <!-- Tarjeta 1: Horarios -->
+                <div class="col-md-4">
+                    <div class="tarjeta-info h-100">
+                        
+                        <h5>Horarios</h5>
+                        <p><strong>Lunes a Viernes:</strong><br>8:00 a 18:00</p>
+                        <p><strong>Sábados:</strong><br>8:00 a 13:00</p>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 2: Contacto -->
+                <div class="col-md-4">
+                    <div class="tarjeta-info h-100">
+                
+                        <h5>Contacto</h5>
+                        <p><strong>Teléfono:</strong><br><span class="texto-destacado">+123 456 789</span></p>
+                        <p><strong>Email:</strong><br>info@tallermecanico.com</p>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 3: Especialidades -->
+                <div class="col-md-4">
+                    <div class="tarjeta-info h-100">
+                        <h5>Especialidades</h5>
+                        <p>Motores, Electricidad, Frenos y Climatización</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Bloque final con el mapa interactivo embebido -->
+        <div class="mapa-contenedor mt-5">
+            <h3>📍 Ubicación del Taller</h3>
+            <div class="ratio ratio-16x9 mt-3" style="max-height: 350px;">
+                <iframe src="https://www.google.com/maps" 
+             allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Vinculación de archivos de JavaScript para lógica e interacción -->
+<script src="https://jsdelivr.net"></script>
+<script src="script.js"></script>
+
+</body>
+
+</html>
+<style>
+/* ==========================================================================
+   1. ESTILOS GENERALES Y CONFIGURACIÓN BASE
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Evita que el padding sume tamaño extra a los elementos */
+    font-family: Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    /* Fondo con imagen centrada y adaptada que cubre toda la pantalla */
+    background: url("images (3).jpg") center/cover no-repeat;
+}
+
+/* ==========================================================================
+   2. CONTENEDOR DE AUTENTICACIÓN (LOGIN Y REGISTRO)
+   ========================================================================== */
+.contenedor {
+    width: 100%;
+    max-width: 420px;
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.3); /* Sombra difuminada para dar profundidad */
+}
+
+.logo {
+    font-size: 60px;
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.subtitulo {
+    text-align: center;
+    color: gray;
+    margin-bottom: 20px;
+}
+
+/* Campos de entrada de datos uniformes */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+/* Botones compartidos */
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s ease; /* Suaviza el cambio de color al pasar el cursor */
+}
+
+.btn-login {
+    background: #ff9800; /* Color naranja mecánico institucional */
+}
+
+.btn-registro {
+    background: #2e7d32; /* Color verde de creación */
+}
+
+.link {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.link a {
+    color: #ff9800;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Elementos donde se inyectan las alertas dinámicas de JavaScript */
+#mensajeLogin,
+#mensajeRegistro {
+    text-align: center;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* Oculta la caja de registro por defecto en el primer render */
+#registroBox {
+    display: none;
+}
+
+
+.dashboard {
+    display: none; /* JavaScript lo cambiará a 'block' al iniciar sesión */
+    position: fixed;
+    inset: 0; /* Cubre el 100% de la pantalla encima del login */
+    background: #f5f5f5;
+    z-index: 1000; /* Asegura que se dibuje por encima del fondo del body */
+}
+
+.navbar {
+    background: #222;
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    height: 70px; /* Altura fija para calcular el scroll del contenido inferior */
+}
+
+.navbar button {
+    width: auto;
+    background: #d32f2f; /* Botón rojo de salida */
+    padding: 10px 15px;
+    margin: 0;
+}
+
+/* ¡CAMBIO CRUCIAL!: Permitir scroll vertical (overflow-y) para ver el mapa e info sin romperse */
+.contenido {
+    display: block; /* block para permitir un flujo vertical correcto */
+    height: calc(100vh - 70px); /* Ocupa exactamente el resto de la pantalla disponible */
+    overflow-y: auto; /* Activa la barra de desplazamiento si el contenido supera el alto */
+    padding: 30px;
+    max-width: 900px; /* Centra el contenido horizontalmente para que se vea elegante */
+    margin: 0 auto;
+}
+
+.usuario {
+    font-weight: bold;
+}
+
+.info-taller {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    text-align: left;
+}
+
+.info-taller h3 {
+    border-bottom: 2px solid #ff9800; /* Subrayado temático para los títulos */
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+}
+
+.mapa-contenedor {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    text-align: left;
+    margin-bottom: 40px; /* Espacio extra al final para que respire el diseño */
+}
+
+
+   /* DISEÑO ADAPTABLE */
+@media(max-width: 600px) {
+    .contenedor {
+        padding: 20px;
+    }
+
+    .navbar {
+        flex-direction: column;
+        height: auto; /* Se adapta dinámicamente si los elementos se enciman en celulares */
+    }
+    
+    .contenido {
+        height: auto; /* Elimina la restricción de altura en pantallas pequeñas */
+    }
+}
+ /* ==========================================================================
+   6. MEJORAS VISUALES PANEL SOBRE NUESTRO TALLER
+   ========================================================================== */
+.titulo-seccion {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #1f1f1f;
+    border-bottom: 3px solid #ff9800;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.descripcion-taller {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    text-align: left;
+    color: #555 !important;
+}
+
+/* Estilo para las nuevas sub-tarjetas interactivas */
+.tarjeta-info {
+    background: #fdfdfd;
+    border: 1px solid #eef0f2;
+    border-radius: 12px;
+    padding: 25px 20px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto levitación al pasar el cursor */
+.tarjeta-info:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    border-color: #ff9800; /* Ilumina el borde con el color del taller */
+}
+
+.icono-tarjeta {
+    font-size: 2.2rem;
+    margin-bottom: 12px;
+}
+
+.tarjeta-info h5 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 15px;
+}
+
+.tarjeta-info p {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.texto-destacado {
+    color: #ff9800;
+    font-weight: bold;
+}
+
+</style>
+
+<script>
+        // LÓGICA DE INTERFAZ: CONMUTACIÓN DE PANTALLAS
+
+// Muestra el formulario de registro y oculta el de inicio de sesión
+function mostrarRegistro() {
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("registroBox").style.display = "block";
+    
+    // Limpia los mensajes previos al cambiar de pantalla
+    document.getElementById("mensajeLogin").innerHTML = "";
+}
+
+// Muestra el formulario de inicio de sesión y oculta el de registro
+function mostrarLogin() {
+    document.getElementById("registroBox").style.display = "none";
+    document.getElementById("loginBox").style.display = "block";
+    
+    // Limpia los mensajes previos al cambiar de pantalla
+    document.getElementById("mensajeRegistro").innerHTML = "";
+}
+
+        //PROCESO DE REGISTRO DE USUARIOS
+function registrar() {
+    // Capturamos los datos ingresados eliminando espacios accidentales
+    let usuario = document.getElementById("registroUsuario").value.trim();
+    let password = document.getElementById("registroPassword").value;
+    let mensaje = document.getElementById("mensajeRegistro");
+
+    // Validación de campos vacíos
+    if (usuario === "" || password === "") {
+        mensaje.innerHTML = "⚠ Complete todos los campos";
+        mensaje.style.color = "red";
+        return; // Frena el proceso si falta información
+    }
+
+    //  Consultamos el almacenamiento local del navegador (LocalStorage)
+    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+    //  Verificamos si el nombre de usuario ya está tomado por otra persona
+    let existe = usuarios.find(u => u.usuario === usuario);
+
+    if (existe) {
+        mensaje.innerHTML = "⚠ Usuario existente";
+        mensaje.style.color = "orange";
+        return; // Frena el proceso si el nombre ya existe
+    }
+     
+    // Agregamos el nuevo objeto de usuario al listado local
+    usuarios.push({
+        usuario: usuario,
+        password: password
+    });
+
+    // Sincronizamos y guardamos la lista actualizada convirtiéndola a texto plano (JSON)
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+    // 7. Mostramos mensaje de éxito visual y limpiamos el formulario de registro
+    mensaje.innerHTML = "✅ Usuario registrado correctamente";
+    mensaje.style.color = "green";
+    document.getElementById("formRegistro").reset(); // Truco limpio para borrar lo escrito
+
+    //  Temporizador: Espera 1.5 segundos para que lean el mensaje y redirige al Login
+    setTimeout(() => {
+        mostrarLogin();
+    }, 1500); 
+}
+
+    //PROCESO DE AUTENTICACIÓN / INICIO DE SESIÓN (LOGIN)
+function login() {
+    //  Capturamos las credenciales que el usuario intenta ingresar
+    let usuario = document.getElementById("loginUsuario").value.trim();
+    let password = document.getElementById("loginPassword").value;
+    let mensaje = document.getElementById("mensajeLogin");
+
+    //  Extraemos los registros guardados en la memoria del navegador
+    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+    // Buscamos al usuario en la base de datos interna
+    let encontrado = usuarios.find(u => u.usuario === usuario);
+
+    //  Validación: El nombre ingresado no existe en el sistema
+    if (!encontrado) {
+        mensaje.innerHTML = "❌ Usuario no encontrado";
+        mensaje.style.color = "red";
+        return; // Frena el acceso
+    }
+
+    // Validación: El usuario existe pero la contraseña no coincide
+    if (encontrado.password !== password) {
+        mensaje.innerHTML = "❌ Usuario o contraseña incorrectos";
+        mensaje.style.color = "red";
+        return; // Frena el acceso
+    }
+
+    // Ocultamos toda la zona de autenticación trasera
+    document.getElementById("authContainer").style.display = "none";
+
+    //  Activamos y hacemos visible el panel de control del taller mecánico
+    document.getElementById("dashboard").style.display = "block";
+
+    // Inyectamos dinámicamente el nombre de la sesión activa en el Navbar
+    document.getElementById("usuarioActivo").innerHTML = "👤 " + usuario;
+}
+
+
+ //CERRAR SESIÓN
+function cerrarSesion() {
+    // 1. Ocultamos el Panel del Taller
+    document.getElementById("dashboard").style.display = "none";
+
+    // 2. Volvemos a hacer visible la caja contenedora de accesos
+    document.getElementById("authContainer").style.display = "flex";
+
+    // 3. Reseteamos la vista por defecto en el Login
+    mostrarLogin();
+
+    // 4. Vaciamos los campos de texto del formulario y limpiamos las alertas viejas
+    document.getElementById("formLogin").reset();
+    document.getElementById("mensajeLogin").innerHTML = "";
+}
+</script>
